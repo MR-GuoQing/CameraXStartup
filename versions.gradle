@@ -1,0 +1,47 @@
+ext.deps = [:]
+
+def versions = [:]
+versions.barcode_scanning = "16.0.2"
+versions.camera_camera2 = "1.0.0-beta09"
+versions.camera_lifecycle = "1.0.0-beta09"
+versions.camera_core = "1.0.0-beta09"
+versions.camera_view = "1.0.0-alpha16"
+versions.android_gradle_plugin = "3.6.0"
+versions.kotlin = "1.4.21"
+versions.kotlin_ktx = "1.1.0"
+versions.material = "1.2.1"
+versions.androidx_annotations = "1.1.0"
+versions.androidx_appcompat = "1.2.0"
+versions.androidx_constraint_layout = "2.0.4"
+
+def deps = [:]
+def androidx = [:]
+androidx.annotations = "androidx.annotation:annotation:$versions.androidx_annotation"
+androidx.appcompat = "androidx.appcompat:appcompat:$versions.androidx_appcompat"
+androidx.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.androidx_constraint_layout"
+deps.androidx = androidx
+
+deps.barcode_scanning = "com.google.mlkit:barcode-scanning:$versions.barcode_scanning"
+def camerax = [:]
+camerax.camera_camera2 = "androidx.camera:camera-camera2:$versions.camera_camera2"
+camerax.camera_lifecycle = "androidx.camera:camera-lifecycle:$versions.camera_lifecycle"
+camerax.camera_core = "androidx.camera:camera-core:$versions.camera_core"
+camerax.camera_view = "androidx.camera:camera-view:$versions.camera_view"
+deps.camerax = camerax
+
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+
+def kotlin = [:]
+kotlin.gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+kotlin.ktx = "androidx.core:core-ktx:$versions.kotlin_ktx"
+kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
+deps.kotlin = kotlin
+
+def build_versions = [:]
+build_versions.min_sdk = 23
+build_versions.target_sdk = 29
+build_versions.build_tools = "29.0.3"
+ext.build_versions = build_versions
+
+deps.material = "com.google.android.material:material:$versions.material"
+ext.deps = deps
