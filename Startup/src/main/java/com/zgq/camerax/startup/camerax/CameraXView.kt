@@ -65,7 +65,6 @@ class CameraXView @JvmOverloads constructor(
                 val cameraSelector = CameraSelector.Builder()
                     .requireLensFacing(cameraSelectorOption)
                     .build()
-
                 setupZoom()
                 setCameraConfig(lifecycleOwner, cameraProvider, cameraSelector)
 

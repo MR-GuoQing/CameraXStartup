@@ -1,7 +1,6 @@
 package com.zgq.camerax.startup.barcodereader
 
 import android.graphics.*
-import android.util.DisplayMetrics
 import android.util.TypedValue
 import com.zgq.camerax.startup.R
 import com.zgq.camerax.startup.camerax.GraphicOverlay
@@ -12,7 +11,6 @@ class BarcodeFrameOverlay(overlay: GraphicOverlay) : GraphicOverlay.Graphic(over
     // Paint
     private lateinit var paint: Paint 
     private val maskColor = overlay.context.getColor(R.color.barcode_frame_mask)
-    private val metrics =  DisplayMetrics().also { overlay.display.getRealMetrics(it) }
     private val frameCornerLength: Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FRAME_CORNER_LENGTH, overlay.resources.displayMetrics)
     private val frameCornerRadius: Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FRAME_CORNER_RADIUS, overlay.resources.displayMetrics)
     private val frameCornerColor: Int = overlay.context.getColor(R.color.white)
