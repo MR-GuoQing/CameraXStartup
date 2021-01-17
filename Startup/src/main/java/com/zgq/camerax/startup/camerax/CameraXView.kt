@@ -8,7 +8,6 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
 import android.widget.FrameLayout
-import androidx.annotation.RequiresPermission
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -55,7 +54,7 @@ class CameraXView @JvmOverloads constructor(
                     .build()
 
                 imageAnalyzer = ImageAnalysis.Builder()
-                    .setTargetResolution(size!!)
+                    .setTargetResolution(size)
                     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
@@ -73,6 +72,7 @@ class CameraXView @JvmOverloads constructor(
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupZoom() {
         val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
             override fun onScale(detector: ScaleGestureDetector): Boolean {
@@ -85,6 +85,9 @@ class CameraXView @JvmOverloads constructor(
         val scaleGestureDetector = ScaleGestureDetector(context, listener)
         camerx_preview.setOnTouchListener { _, event ->
             camerx_preview.post {
+                postDelayed({
+                    Log.e("tag", "${camerx_preview.width}+ ${camerx_preview.height}")
+                },300)
                 scaleGestureDetector.onTouchEvent(event)
             }
             return@setOnTouchListener true
@@ -107,17 +110,15 @@ class CameraXView @JvmOverloads constructor(
             preview?.setSurfaceProvider(
                 camerx_preview.surfaceProvider
             )
-            post {
-                graphicOverlay.size = Size(camerx_preview.width, camerx_preview.height)
-            }
         } catch (e: Exception) {
             Log.e(TAG, "Use case binding failed", e)
         }
     }
 
     private fun selectAnalyzer(type: AnalysisType): ImageAnalysis.Analyzer {
+
         when (type) {
-            is AnalysisType.BARCODE -> return BarcodeScannerProcessor(graphicOverlay, type.isMultiMode)
+            is AnalysisType.BARCODE -> return BarcodeScannerProcessor(context, graphicOverlay, type)
             else -> error("Not supported analysis type")
         }
     }

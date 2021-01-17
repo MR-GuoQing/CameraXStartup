@@ -2,20 +2,17 @@ package com.zgq.camerax.startup.camerax
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.util.AttributeSet
-import android.util.Size
 import android.view.View
 
-class GraphicOverlay constructor(context: Context,
-                                          attrs: AttributeSet? = null,
-                                          defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
+class GraphicOverlay constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
     private val obj = Any()
     private val graphics: MutableList<Graphic> = ArrayList()
-    var size: Size = Size(this.width, this.height)
-    set(value) {
-        field = value
-        postInvalidate()
-    }
 
     fun clear() {
         synchronized(obj) {
@@ -46,9 +43,36 @@ class GraphicOverlay constructor(context: Context,
             }
         }
     }
+
     abstract class Graphic(private val overlay: GraphicOverlay) {
 
         abstract fun draw(canvas: Canvas?)
+
+        fun transformRect(width: Int, height: Int, cropRect: Rect): Rect {
+            fun calculateScale(): Float {
+                val scaleX = overlay.width.toFloat() / width
+                val scaleY = overlay.height.toFloat() / height
+                return scaleX.coerceAtLeast(scaleY)
+
+            }
+
+            fun transformX(x: Int): Int {
+                val offsetX = overlay.width.minus(width.times(calculateScale())).div(2)
+                return x.times(calculateScale()).plus(offsetX).toInt()
+            }
+
+            fun transformY(y: Int): Int {
+                val offsetY = overlay.height.minus(height.times(calculateScale())).div(2)
+                return y.times(calculateScale()).plus(offsetY).toInt()
+            }
+
+            return Rect().apply {
+                top = transformY(cropRect.top)
+                left = transformX(cropRect.left)
+                bottom = transformY(cropRect.bottom)
+                right = transformX(cropRect.right)
+            }
+        }
 
         fun postInvalidate() {
             overlay.postInvalidate()

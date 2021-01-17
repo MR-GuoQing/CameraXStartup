@@ -8,23 +8,24 @@ import kotlin.math.min
 
 class BarcodeFrameOverlay(overlay: GraphicOverlay) : GraphicOverlay.Graphic(overlay) {
     
-    // Paint
-    private lateinit var paint: Paint 
+    private lateinit var paint: Paint
     private val maskColor = overlay.context.getColor(R.color.barcode_frame_mask)
     private val frameCornerLength: Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FRAME_CORNER_LENGTH, overlay.resources.displayMetrics)
     private val frameCornerRadius: Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FRAME_CORNER_RADIUS, overlay.resources.displayMetrics)
     private val frameCornerColor: Int = overlay.context.getColor(R.color.white)
     private val frameCornerLineWidth:Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FRAME_CORNER_LINE_WIDTH, overlay.resources.displayMetrics)
-    private val frameRectF by lazy {
-        val frameLength = min(overlay.size.width, overlay.size.height).times(FRAME_RATIO)
-        val leftOffset = (overlay.size.width - frameLength).div(2)
-        val topOffset = overlay.size.height.times(DEFAULT_FRAME_CONTAINER_TOP_RATIO) - frameLength.div(2)
+    val frameRectF by lazy {
+        val frameLength = min(overlay.width, overlay.height).times(FRAME_RATIO)
+        val leftOffset = (overlay.width - frameLength).div(2)
+        val topOffset = overlay.height.times(DEFAULT_FRAME_CONTAINER_TOP_RATIO) - frameLength.div(2)
         RectF(leftOffset, topOffset, leftOffset + frameLength, (topOffset + frameLength))
     }
     override fun draw(canvas: Canvas?) {
-        drawMask(canvas)
-        drawFrameRect(canvas)
-        drawFrameContainer(canvas)
+        frameRectF?.let {
+            drawMask(canvas)
+            drawFrameRect(canvas)
+            drawFrameContainer(canvas)
+        }
     }
 
     private fun drawFrameRect(canvas: Canvas?) {

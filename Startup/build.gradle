@@ -37,6 +37,8 @@ dependencies {
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.ktx
     implementation deps.androidx.appcompat
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation deps.barcode_scanning
     implementation deps.camerax.camera_camera2
     implementation deps.camerax.camera_lifecycle

@@ -2,6 +2,7 @@ package com.zgq.camerax.startup.demo
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -16,7 +17,15 @@ class BarcodeReaderActivity: AppCompatActivity() {
         setContentView(R.layout.activity_barcode_reader)
         with(barcode_reader){
             if (requestPermissionGranted()){
-                this.startCamera(this@BarcodeReaderActivity, AnalysisType.BARCODE(false))
+                this.startCamera(this@BarcodeReaderActivity, AnalysisType.BARCODE(false, object: AnalysisType.BarcodeResultCallback{
+                    override fun onFailed(e: Exception) {
+                        Log.e("Result", "${e.message}")
+                    }
+
+                    override fun onSuccess(result: List<String>) {
+                        Log.e("Result", "$result")
+                    }
+                }))
             }else{
                 ActivityCompat.requestPermissions(this@BarcodeReaderActivity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
             }
@@ -31,7 +40,15 @@ class BarcodeReaderActivity: AppCompatActivity() {
     ) {
         if(requestCode == REQUEST_CODE_PERMISSIONS){
             if (requestPermissionGranted()) {
-                barcode_reader.startCamera(this, AnalysisType.BARCODE(false))
+                barcode_reader.startCamera(this, AnalysisType.BARCODE(false, object: AnalysisType.BarcodeResultCallback{
+                    override fun onSuccess(result: List<String>) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onFailed(e: Exception) {
+                        TODO("Not yet implemented")
+                    }
+                }))
             } else {
                 Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT)
                     .show()
